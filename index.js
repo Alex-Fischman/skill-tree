@@ -5,8 +5,8 @@ function update() {
 	let text = query.get("text");
 	document.getElementById("text").value = text;
 
-	let nodes = [...text.matchAll(/([~-]) (.+): (.*)\n/g)]
-		.map(match => ({ name: match[2], desc: match[3], is_story: match[1] === "~" }));
+	let nodes = [...text.matchAll(/([~+-]) (.+): (.*)\n/g)]
+		.map(match => ({ name: match[2], desc: match[3], type: match[1] }));
 	let edges = [...text.matchAll(/\n(.+?) -> (.+?)(?=\n|$)/g)].map(match => ({
 		start: nodes.find(n => n.name === match[1]),
 		end: nodes.find(n => n.name === match[2])
@@ -48,14 +48,15 @@ function update() {
 				cell.style.top = top + node.y * cellHeight + "px";
 				cell.style.width = cellWidth + "px";
 				cell.style.height = cellHeight + "px";
-				cell.addEventListener("click", () => {
-					query.set("desced", node.name);
-					location.search = query.toString();
-				}, {capture: true});
 				let text = cell.appendChild(document.createElement("div"));
 				text.innerText = node.name;
 				text.id = "node: " + node.name;
-				if (node.is_story) text.style.borderRadius = cellHeight + "px";
+				if (node.type === "~") text.style.borderRadius = cellHeight + "px";
+				else text.classList.add(node.type === "+"? "green": "red");
+				text.addEventListener("click", () => {
+					query.set("desced", node.name);
+					location.search = query.toString();
+				}, {capture: true});
 			}
 		}
 	} {

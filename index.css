@@ -28,6 +28,14 @@
 	padding: 1vh;
 }
 
+.green {
+	background: #EFE;
+}
+
+.red {
+	background: #FEE;
+}
+
 #edges {
 	position: absolute;
 	left: 0;
